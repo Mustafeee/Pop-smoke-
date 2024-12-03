@@ -17,12 +17,12 @@ A simple command-line To-Do Tracker built using Bash. This script allows you to 
 1. Clone the repository or download the `to_do_tracker.sh` script to your local machine.
 2. Make the script executable:
     ```bash
-    chmod +x to_do_tracker.sh
+    cd Pop-smoke-
     ```
 
 3. Run the script:
     ```bash
-    ./to_do_tracker.sh
+    bash Myfile.sh
     ```
 
 ## Usage
