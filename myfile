@@ -1,0 +1,74 @@
+import requests
+import threading
+import time
+
+# Tilmaan guud ee script-ka
+print("Quick Stress Test Tool - By YahaY Pop")
+print("Fadlan kaliya u isticmaal bogga aad leedahay rukhsadda ku tijaabinta!")
+
+# Isticmaaluhu ha galiyo URL-ka, tirada requests-ka iyo threads
+target_url = input("Geli URL-ka bartilmaameedka (e.g., https://example.com): ")
+number_of_requests = int(input("Geli tirada requests-ka aad rabto: "))
+threads_count = int(input("Geli tirada threads-ka: "))
+method = input("Geli habka request-ka (GET, POST, HEAD): ").upper()
+
+# Qiyaasta wakhtiga lagu tijaabinayo
+start_time = time.time()
+
+# Tirinta requests-ka guuleystay iyo kuwa fashilmay
+success_count = 0
+failure_count = 0
+
+# Abuurida Custom Headers (Optional)
+custom_headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+}
+
+# Function-ka diraya requests
+def send_request():
+    global success_count, failure_count
+    try:
+        if method == "GET":
+            response = requests.get(target_url, headers=custom_headers, timeout=5)
+        elif method == "POST":
+            response = requests.post(target_url, headers=custom_headers, timeout=5)
+        elif method == "HEAD":
+            response = requests.head(target_url, headers=custom_headers, timeout=5)
+        else:
+            print(f"Habka '{method}' lama garanayo. Fadlan isticmaal GET, POST ama HEAD.")
+            return
+
+        # Haddii status code uu yahay 200 ama ku dhow, guul!
+        if response.status_code in range(200, 300):
+            success_count += 1
+        else:
+            failure_count += 1
+
+        print(f"Request sent! Status code: {response.status_code}")
+
+    except Exception as e:
+        failure_count += 1
+        print(f"Error occurred: {e}")
+
+# Abuur Threads
+threads = []
+for i in range(threads_count):
+    thread = threading.Thread(target=send_request)
+    threads.append(thread)
+    thread.start()
+
+# Sug dhammaan threads-ka
+for thread in threads:
+    thread.join()
+
+# Tusaale: Wakhtiga iyo Natiijada
+end_time = time.time()
+elapsed_time = end_time - start_time
+
+print("\n===== Stress Test Summary =====")
+print(f"URL: {target_url}")
+print(f"Total Requests: {number_of_requests}")
+print(f"Successful Requests: {success_count}")
+print(f"Failed Requests: {failure_count}")
+print(f"Time Taken: {elapsed_time:.2f} seconds")
+print("================================")
